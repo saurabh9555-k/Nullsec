@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NullSec Gear – Red Team Arsenal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    /* Red team specific styles */
+    .red-team-banner {
+      background: var(--card);
+      border: 1px solid var(--destructive);
+      border-radius: var(--radius-lg);
+      padding: 48px;
+      margin-top: 40px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .banner-glow {
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 50%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,0,0,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .banner-badge {
+      align-self: flex-start;
+      background: var(--destructive);
+      color: var(--destructive-foreground);
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .banner-title {
+      font-size: 40px;
+      font-weight: 800;
+      color: var(--foreground);
+      margin: 0;
+      letter-spacing: -1px;
+    }
+    .banner-desc {
+      font-size: 16px;
+      color: var(--muted-foreground);
+      max-width: 600px;
+      line-height: 1.6;
+      margin: 0;
+    }
+    .log-window {
+      background: #000;
+      border: 1px solid #333;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      font-size: 12px;
+      color: #4ade80;
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      letter-spacing: 0.5px;
+    }
+    .log-line {
+      display: flex;
+      gap: 8px;
+    }
+    .log-prompt {
+      color: var(--destructive);
+      font-weight: 700;
+    }
+    .store-container {
+      padding: 40px 0 80px;
+      display: flex;
+      gap: 48px;
+      align-items: flex-start;
+    }
+    .store-sidebar {
+      width: 260px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .store-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .store-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .store-toolbar-text {
+      font-size: 14px;
+      color: var(--muted-foreground);
+    }
+    .store-toolbar-sort {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--foreground);
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .filter-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--foreground);
+      margin: 0;
+    }
+    .filter-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .filter-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+      color: var(--muted-foreground);
+      cursor: pointer;
+      gap: 8px;
+    }
+    .filter-item span:first-child {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+    }
+    .filter-item.active {
+      color: var(--destructive);
+      font-weight: 600;
+    }
+    .filter-item .count {
+      font-size: 12px;
+      background: var(--muted);
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      color: var(--muted-foreground);
+    }
+    .filter-item.active .count {
+      background: var(--destructive);
+      color: var(--destructive-foreground);
+    }
+    .filter-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: var(--foreground);
+      cursor: pointer;
+    }
+    .filter-checkbox span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+    }
+    .checkbox-box {
+      width: 16px;
+      height: 16px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .checkbox-box.checked {
+      background: var(--destructive);
+      border-color: var(--destructive);
+    }
+    .btn-outline-red {
+      background: transparent;
+      color: var(--destructive);
+      border: 1px solid var(--destructive);
+      padding: 0 24px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .btn-add {
+      padding: 0 16px;
+      height: 36px;
+      font-size: 13px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--destructive);
+      background: transparent;
+      color: var(--destructive);
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-to-content">Skip to main content</a>
+
+  <header class="header-wrapper">
+    <div class="container">
+      <nav class="navbar">
+        <a href="index.html" class="nav-brand">
+          <div style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: var(--primary); border-radius: var(--radius-sm);">
+            <iconify-icon icon="lucide:shield-half" style="font-size: 18px; color: var(--primary-foreground)"></iconify-icon>
+          </div>
+          <span>NullSec Gear</span>
+        </a>
+        <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
+          <iconify-icon icon="lucide:menu" style="font-size: 20px;"></iconify-icon>
+        </button>
+        <div class="nav-links">
+          <a href="index.html" class="nav-link">All Products</a>
+          <a href="red-team.html" class="nav-link active">Red Team</a>
+          <a href="blue-team.html" class="nav-link">Blue Team</a>
+          <a href="#" class="nav-link">Enterprise</a>
+        </div>
+        <div class="nav-actions">
+          <button class="icon-btn" aria-label="Search products">
+            <iconify-icon icon="lucide:search" style="font-size: 18px;"></iconify-icon>
+          </button>
+          <a href="cart.html" class="icon-btn" style="position: relative;" aria-label="Shopping cart">
+            <iconify-icon icon="lucide:shopping-cart" style="font-size: 18px;"></iconify-icon>
+            <span class="cart-badge" aria-label="items in cart">2</span>
+          </a>
+          <button class="icon-btn" aria-label="User account">
+            <iconify-icon icon="lucide:user" style="font-size: 18px;"></iconify-icon>
+          </button>
+          <button class="theme-toggle" aria-label="Toggle theme">
+            <iconify-icon icon="lucide:sun" class="sun-icon" style="font-size: 18px;"></iconify-icon>
+            <iconify-icon icon="lucide:moon" class="moon-icon" style="font-size: 18px; display: none;"></iconify-icon>
+          </button>
+        </div>
+      </nav>
+      <div class="mobile-nav">
+        <div class="mobile-nav-links">
+          <a href="index.html" class="nav-link">All Products</a>
+          <a href="red-team.html" class="nav-link active">Red Team</a>
+          <a href="blue-team.html" class="nav-link">Blue Team</a>
+          <a href="#" class="nav-link">Enterprise</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <div class="container">
+      <div class="red-team-banner">
+        <div class="banner-glow"></div>
+        <div class="banner-badge">Warning: Offensive Tools</div>
+        <h1 class="banner-title">Red Team Arsenal</h1>
+        <p class="banner-desc">Restricted access hardware for authorized penetration testing and adversary simulation. These tools are designed to bypass physical and digital security perimeters.</p>
+        <div class="log-window">
+          <div class="log-line"><span class="log-prompt">root@nullsec:~#</span> <span>nmap -sS -O target_network</span></div>
+          <div class="log-line"><span style="color:#666">[+] Starting Nmap 7.92 at 2025-10-23 04:00 EDT</span></div>
+          <div class="log-line"><span style="color:#666">[+] Host is up (0.0020s latency).</span></div>
+          <div class="log-line"><span class="log-prompt">root@nullsec:~#</span> <span>./deploy_payload.sh --stealth</span></div>
+          <div class="log-line"><span>Injecting keystrokes... [SUCCESS]</span></div>
+        </div>
+      </div>
+
+      <div class="store-container">
+        <aside class="store-sidebar">
+          <div class="filter-group">
+            <h3 class="filter-title">Categories</h3>
+            <div class="filter-list">
+              <div class="filter-item active"><span>All Offensive Gear</span><span class="count">42</span></div>
+              <div class="filter-item"><span>Keystroke Injection</span><span class="count">8</span></div>
+              <div class="filter-item"><span>Wireless Auditing</span><span class="count">12</span></div>
+              <div class="filter-item"><span>Physical Access</span><span class="count">15</span></div>
+              <div class="filter-item"><span>Network Implants</span><span class="count">5</span></div>
+              <div class="filter-item"><span>Covert Surveillance</span><span class="count">2</span></div>
+            </div>
+          </div>
+          <div class="filter-group">
+            <h3 class="filter-title">Skill Level</h3>
+            <div class="filter-list">
+              <div class="filter-checkbox"><div class="checkbox-box"></div><span>Beginner</span></div>
+              <div class="filter-checkbox"><div class="checkbox-box checked"><iconify-icon icon="lucide:check" style="font-size:10px; color:var(--destructive-foreground)"></iconify-icon></div><span>Advanced</span></div>
+              <div class="filter-checkbox"><div class="checkbox-box"></div><span>Expert / Operator</span></div>
+            </div>
+          </div>
+          <div class="filter-group">
+            <h3 class="filter-title">Connection Interface</h3>
+            <div class="filter-list">
+              <div class="filter-checkbox"><div class="checkbox-box"></div><span>USB-A</span></div>
+              <div class="filter-checkbox"><div class="checkbox-box checked"><iconify-icon icon="lucide:check" style="font-size:10px; color:var(--destructive-foreground)"></iconify-icon></div><span>USB-C</span></div>
+              <div class="filter-checkbox"><div class="checkbox-box"></div><span>Wireless (WiFi/BT)</span></div>
+              <div class="filter-checkbox"><div class="checkbox-box"></div><span>RJ45 Ethernet</span></div>
+            </div>
+          </div>
+        </aside>
+
+        <div class="store-main">
+          <div class="store-toolbar">
+            <div class="store-toolbar-text">Showing 1-9 of 42 tactical tools</div>
+            <div class="store-toolbar-sort">Sort by: Threat Level (High to Low) <iconify-icon icon="lucide:chevron-down"></iconify-icon></div>
+          </div>
+          <div class="product-grid">
+            <article class="product-card">
+              <div class="product-img-wrapper">
+                <div class="product-badge badge-red">Keystroke</div>
+                <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/d0f5b3f7-3acb-4fdd-9009-ff327b18d4b5.jpg" alt="Phantom Cable Elite" loading="lazy">
+              </div>
+              <div class="product-info">
+                <h4 class="product-name">Phantom Cable Elite</h4>
+                <p class="product-type">Covert Keystroke Injector</p>
+                <div class="product-bottom">
+                  <span class="product-price">$139.99</span>
+                  <button class="btn-add">Add to Arsenal</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card">
+              <div class="product-img-wrapper">
+                <div class="product-badge badge-red">Wireless</div>
+                <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/fcdaff21-bd4d-41b1-945b-3893721fe639.jpg" alt="RogueNet Auditor" loading="lazy">
+              </div>
+              <div class="product-info">
+                <h4 class="product-name">RogueNet Auditor</h4>
+                <p class="product-type">Rogue AP / Deauther</p>
+                <div class="product-bottom">
+                  <span class="product-price">$210.00</span>
+                  <button class="btn-add">Add to Arsenal</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card">
+              <div class="product-img-wrapper">
+                <div class="product-badge badge-red">RFID</div>
+                <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/013f3d2e-1a5d-429f-a0c6-3e23e7c7ae7b.jpg" alt="GhostClone Pro" loading="lazy">
+              </div>
+              <div class="product-info">
+                <h4 class="product-name">GhostClone Pro</h4>
+                <p class="product-type">Low/High Freq RFID Copier</p>
+                <div class="product-bottom">
+                  <span class="product-price">$299.00</span>
+                  <button class="btn-add">Add to Arsenal</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card">
+              <div class="product-img-wrapper">
+                <div class="product-badge badge-red">Implant</div>
+                <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/f39c38d2-a91e-4e21-94cd-4fbcab2fd09e.jpg" alt="LAN Vampire" loading="lazy">
+              </div>
+              <div class="product-info">
+                <h4 class="product-name">LAN Vampire</h4>
+                <p class="product-type">Inline Network Sniffer & C2</p>
+                <div class="product-bottom">
+                  <span class="product-price">$145.00</span>
+                  <button class="btn-add">Add to Arsenal</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card">
+              <div class="product-img-wrapper">
+                <div class="product-badge badge-red">Physical</div>
+                <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/1f8a9fef-c29e-4125-a283-7d1494b016a3.jpg" alt="Operator Pick Set" loading="lazy">
+              </div>
+              <div class="product-info">
+                <h4 class="product-name">Operator Pick Set</h4>
+                <p class="product-type">Titanium Covert Entry Kit</p>
+                <div class="product-bottom">
+                  <span class="product-price">$85.00</span>
+                  <button class="btn-add">Add to Arsenal</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card">
+              <div class="product-img-wrapper">
+                <div class="product-badge badge-red">Payload</div>
+                <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/03e9b0d3-8aa7-4280-9913-f58886c41d9e.jpg" alt="Venom Drive" loading="lazy">
+              </div>
+              <div class="product-info">
+                <h4 class="product-name">Venom Drive</h4>
+                <p class="product-type">Multi-Payload Execution Tool</p>
+                <div class="product-bottom">
+                  <span class="product-price">$110.00</span>
+                  <button class="btn-add">Add to Arsenal</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card">
+              <div class="product-img-wrapper">
+                <div class="product-badge badge-red">SDR</div>
+                <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/a9b78422-2e20-47f6-962e-37726c6c64bc.jpg" alt="Specter SDR" loading="lazy">
+              </div>
+              <div class="product-info">
+                <h4 class="product-name">Specter SDR</h4>
+                <p class="product-type">Wideband Radio Transceiver</p>
+                <div class="product-bottom">
+                  <span class="product-price">$350.00</span>
+                  <button class="btn-add">Add to Arsenal</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card">
+              <div class="product-img-wrapper">
+                <div class="product-badge badge-red">Wearable</div>
+                <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/da9d170b-8368-42e4-802d-e246cabc9bf8.jpg" alt="WristCom Deauther" loading="lazy">
+              </div>
+              <div class="product-info">
+                <h4 class="product-name">WristCom Deauther</h4>
+                <p class="product-type">Wearable WiFi Attack Vector</p>
+                <div class="product-bottom">
+                  <span class="product-price">$180.00</span>
+                  <button class="btn-add">Add to Arsenal</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card">
+              <div class="product-img-wrapper">
+                <div class="product-badge badge-red">Surveillance</div>
+                <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/a1b8f56c-7867-465f-8789-ef73e42f2113.jpg" alt="Oculus Micro" loading="lazy">
+              </div>
+              <div class="product-info">
+                <h4 class="product-name">Oculus Micro</h4>
+                <p class="product-type">Covert Drop Camera 4K</p>
+                <div class="product-bottom">
+                  <span class="product-price">$245.00</span>
+                  <button class="btn-add">Add to Arsenal</button>
+                </div>
+              </div>
+            </article>
+          </div>
+          <div style="display:flex; justify-content:center; margin-top:32px">
+            <a href="#" class="btn-outline-red">Load More Hardware</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="alert" aria-live="polite">
+    <iconify-icon icon="lucide:check-circle" style="font-size: 20px; color: var(--success);"></iconify-icon>
+    <span id="toast-message">Item added to cart!</span>
+  </div>
+
+  <footer class="footer-wrapper animate-on-scroll" role="contentinfo">
+    <div class="container">
+      <div class="footer">
+        <div class="footer-brand">
+          <a href="index.html" class="nav-brand">
+            <div style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:var(--primary);border-radius:var(--radius-sm);">
+              <iconify-icon icon="lucide:shield-half" style="font-size:14px; color:var(--primary-foreground)"></iconify-icon>
+            </div>
+            <span>NullSec Gear</span>
+          </a>
+          <p class="footer-desc">Providing mission-critical offensive and defensive security hardware to professionals worldwide.</p>
+        </div>
+        <div class="footer-col">
+          <h3 class="footer-col-title">Red Team</h3>
+          <a href="#" class="footer-link">Keystroke Injectors</a>
+          <a href="#" class="footer-link">Wireless Auditors</a>
+          <a href="#" class="footer-link">Physical Access</a>
+          <a href="#" class="footer-link">RFID Cloners</a>
+        </div>
+        <div class="footer-col">
+          <h3 class="footer-col-title">Blue Team</h3>
+          <a href="#" class="footer-link">Hardware Firewalls</a>
+          <a href="#" class="footer-link">FIDO2 Keys</a>
+          <a href="#" class="footer-link">Cold Storage</a>
+          <a href="#" class="footer-link">Secure Routers</a>
+        </div>
+        <div class="footer-col">
+          <h3 class="footer-col-title">Support</h3>
+          <a href="#" class="footer-link">Documentation</a>
+          <a href="#" class="footer-link">Shipping Policy</a>
+          <a href="#" class="footer-link">Bulk Orders</a>
+          <a href="#" class="footer-link">Contact Us</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2025 NullSec Gear. All rights reserved.</div>
+        <div style="display: flex; gap: 16px;">
+          <a href="#" class="footer-link">Privacy Policy</a>
+          <a href="#" class="footer-link">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

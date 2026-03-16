@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NullSec Gear – Blue Team Defense</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    /* Blue team specific styles */
+    .blue-header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 80px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .blue-header-content {
+      position: relative;
+      z-index: 2;
+      max-width: 640px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      align-items: flex-start;
+    }
+    .blue-title {
+      font-size: 48px;
+      font-weight: 800;
+      margin: 0;
+      color: var(--foreground);
+      letter-spacing: -1px;
+      line-height: 1.1;
+    }
+    .blue-desc {
+      font-size: 18px;
+      color: var(--muted-foreground);
+      margin: 0;
+      line-height: 1.6;
+    }
+    .blue-header-bg {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 50%;
+      height: 100%;
+      opacity: 0.4;
+      mask-image: linear-gradient(to right, transparent, black);
+      -webkit-mask-image: linear-gradient(to right, transparent, black);
+    }
+    .blue-header-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .store-container {
+      display: flex;
+      gap: 48px;
+      padding: 64px 0;
+    }
+    .store-sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .filter-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--foreground);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0;
+    }
+    .filter-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .filter-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: var(--muted-foreground);
+      cursor: pointer;
+    }
+    .filter-item.active {
+      color: var(--foreground);
+      font-weight: 600;
+    }
+    .checkbox {
+      width: 20px;
+      height: 20px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .checkbox.checked {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    .store-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .store-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .results-count {
+      font-size: 14px;
+      color: var(--muted-foreground);
+      font-weight: 500;
+    }
+    .sort-dropdown {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--foreground);
+      font-weight: 500;
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-to-content">Skip to main content</a>
+
+  <header class="header-wrapper">
+    <div class="container">
+      <nav class="navbar">
+        <a href="index.html" class="nav-brand">
+          <div style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: var(--primary); border-radius: var(--radius-sm);">
+            <iconify-icon icon="lucide:shield-half" style="font-size: 18px; color: var(--primary-foreground)"></iconify-icon>
+          </div>
+          <span>NullSec Gear</span>
+        </a>
+        <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
+          <iconify-icon icon="lucide:menu" style="font-size: 20px;"></iconify-icon>
+        </button>
+        <div class="nav-links">
+          <a href="index.html" class="nav-link">All Products</a>
+          <a href="red-team.html" class="nav-link">Red Team</a>
+          <a href="blue-team.html" class="nav-link active">Blue Team</a>
+          <a href="#" class="nav-link">Enterprise</a>
+        </div>
+        <div class="nav-actions">
+          <button class="icon-btn" aria-label="Search products">
+            <iconify-icon icon="lucide:search" style="font-size: 18px;"></iconify-icon>
+          </button>
+          <a href="cart.html" class="icon-btn" style="position: relative;" aria-label="Shopping cart">
+            <iconify-icon icon="lucide:shopping-cart" style="font-size: 18px;"></iconify-icon>
+            <span class="cart-badge" aria-label="items in cart">2</span>
+          </a>
+          <button class="icon-btn" aria-label="User account">
+            <iconify-icon icon="lucide:user" style="font-size: 18px;"></iconify-icon>
+          </button>
+          <button class="theme-toggle" aria-label="Toggle theme">
+            <iconify-icon icon="lucide:sun" class="sun-icon" style="font-size: 18px;"></iconify-icon>
+            <iconify-icon icon="lucide:moon" class="moon-icon" style="font-size: 18px; display: none;"></iconify-icon>
+          </button>
+        </div>
+      </nav>
+      <div class="mobile-nav">
+        <div class="mobile-nav-links">
+          <a href="index.html" class="nav-link">All Products</a>
+          <a href="red-team.html" class="nav-link">Red Team</a>
+          <a href="blue-team.html" class="nav-link active">Blue Team</a>
+          <a href="#" class="nav-link">Enterprise</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="blue-header">
+      <div class="blue-header-bg">
+        <img src="https://storage.googleapis.com/banani-generated-images/generated-images/91d88ad5-690a-4985-a970-a8ede682b86a.jpg" alt="Blue Team Defense" loading="lazy">
+      </div>
+      <div class="container">
+        <div class="blue-header-content">
+          <div class="badge-blue">Defensive Gear</div>
+          <h1 class="blue-title">Fortify Your Perimeter</h1>
+          <p class="blue-desc">Enterprise-grade defensive hardware designed to detect, deny, and disrupt advanced persistent threats. Secure your infrastructure from the ground up.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="store-container">
+        <aside class="store-sidebar">
+          <div class="filter-group">
+            <h3 class="filter-title">Categories</h3>
+            <div class="filter-list">
+              <div class="filter-item active">All Defensive Gear</div>
+              <div class="filter-item">Authentication Keys</div>
+              <div class="filter-item">Secure Storage</div>
+              <div class="filter-item">Hardware Firewalls</div>
+              <div class="filter-item">Network Defense</div>
+              <div class="filter-item">Signal Protection</div>
+              <div class="filter-item">Anti-Tamper Devices</div>
+            </div>
+          </div>
+          <div class="filter-group">
+            <h3 class="filter-title">Availability</h3>
+            <div class="filter-list">
+              <div class="filter-item">
+                <div class="checkbox checked"><iconify-icon icon="lucide:check" style="font-size:14px; color:var(--primary-foreground)"></iconify-icon></div>
+                In Stock (24)
+              </div>
+              <div class="filter-item">
+                <div class="checkbox"></div>
+                Pre-Order (3)
+              </div>
+            </div>
+          </div>
+          <div class="filter-group">
+            <h3 class="filter-title">Price Range</h3>
+            <div class="filter-list">
+              <div class="filter-item"><div class="checkbox"></div>Under $50</div>
+              <div class="filter-item"><div class="checkbox"></div>$50 - $150</div>
+              <div class="filter-item"><div class="checkbox"></div>$150 - $500</div>
+              <div class="filter-item"><div class="checkbox"></div>Over $500</div>
+            </div>
+          </div>
+        </aside>
+
+        <div class="store-main">
+          <div class="store-toolbar">
+            <div class="results-count">Showing 1-9 of 24 products</div>
+            <div class="sort-dropdown">Sort by: Recommended <iconify-icon icon="lucide:chevron-down"></iconify-icon></div>
+          </div>
+          <div class="product-grid">
+            <article class="product-card">
+              <div class="product-img-wrapper">
+                <div class="product-badge badge-blue">Best Seller</div>
+                <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/b75a2801-73ea-495b-8ee6-e62d6ce01fce.jpg" alt="Aegis FIDO2 Key" loading="lazy">
+              </div>
+              <div class="product-info">
+                <h4 class="product-name">Aegis FIDO2 Key</h4>
+                <p class="product-type">Hardware Authentication</p>
+                <div class="product-bottom">
+                  <span class="product-price">$55.00</span>
+                  <button class="btn-sm">Add to Cart</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card">
+              <div class="product-img-wrapper">
+                <div class="product-badge badge-blue">FIPS 140-2</div>
+                <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/3b6aaf6b-960d-4e1a-b6fe-70eec4050c0e.jpg" alt="VaultDrive Encrypted" loading="lazy">
+              </div>
+              <div class="product-info">
+                <h4 class="product-name">VaultDrive Encrypted</h4>
+                <p class="product-type">Encrypted Cold Storage</p>
+                <div class="product-bottom">
+                  <span class="product-price">$349.99</span>
+                  <button class="btn-sm">Add to Cart</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card">
+              <div class="product-img-wrapper">
+                <div class="product-badge badge-blue">Enterprise</div>
+                <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/0a9dd13b-a627-4f04-984a-a63a12e6feb6.jpg" alt="Citadel Edge Firewall" loading="lazy">
+              </div>
+              <div class="product-info">
+                <h4 class="product-name">Citadel Edge Firewall</h4>
+                <p class="product-type">Hardware Gateway</p>
+                <div class="product-bottom">
+                  <span class="product-price">$899.00</span>
+                  <button class="btn-sm">Add to Cart</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card">
+              <div class="product-img-wrapper">
+                <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/ef473620-b0ec-490b-bbbc-83bffdc18e88.jpg" alt="Faraday Shield Bag" loading="lazy">
+              </div>
+              <div class="product-info">
+                <h4 class="product-name">Faraday Shield Bag</h4>
+                <p class="product-type">Signal Blocking</p>
+                <div class="product-bottom">
+                  <span class="product-price">$45.00</span>
+                  <button class="btn-sm">Add to Cart</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card">
+              <div class="product-img-wrapper">
+                <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/fd4acccd-6134-4b06-92e8-c4d203181f68.jpg" alt="Titan RFID Wallet" loading="lazy">
+              </div>
+              <div class="product-info">
+                <h4 class="product-name">Titan RFID Wallet</h4>
+                <p class="product-type">Access Control Defense</p>
+                <div class="product-bottom">
+                  <span class="product-price">$65.00</span>
+                  <button class="btn-sm">Add to Cart</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card">
+              <div class="product-img-wrapper">
+                <div class="product-badge badge-blue">New</div>
+                <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/682fdf72-f85e-4edc-ae99-f70791cc86bb.jpg" alt="Biometric Token V2" loading="lazy">
+              </div>
+              <div class="product-info">
+                <h4 class="product-name">Biometric Token V2</h4>
+                <p class="product-type">Zero Trust Auth</p>
+                <div class="product-bottom">
+                  <span class="product-price">$120.00</span>
+                  <button class="btn-sm">Add to Cart</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card">
+              <div class="product-img-wrapper">
+                <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/bdefeb7e-dee5-4faf-9de8-b191910f53e7.jpg" alt="Secure USB Defender" loading="lazy">
+              </div>
+              <div class="product-info">
+                <h4 class="product-name">Secure USB Defender</h4>
+                <p class="product-type">USB Data Sanitizer</p>
+                <div class="product-bottom">
+                  <span class="product-price">$85.00</span>
+                  <button class="btn-sm">Add to Cart</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card">
+              <div class="product-img-wrapper">
+                <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/77df0960-84d1-4fdb-92e5-613317b34336.jpg" alt="Quantum Entropy Gen" loading="lazy">
+              </div>
+              <div class="product-info">
+                <h4 class="product-name">Quantum Entropy Gen</h4>
+                <p class="product-type">Hardware RNG</p>
+                <div class="product-bottom">
+                  <span class="product-price">$250.00</span>
+                  <button class="btn-sm">Add to Cart</button>
+                </div>
+              </div>
+            </article>
+            <article class="product-card">
+              <div class="product-img-wrapper">
+                <div class="product-badge badge-blue">Enterprise</div>
+                <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/8b29cffc-b3c5-436c-924b-5522fbe13b7c.jpg" alt="IronClad Router" loading="lazy">
+              </div>
+              <div class="product-info">
+                <h4 class="product-name">IronClad Router</h4>
+                <p class="product-type">Secure Network Gateway</p>
+                <div class="product-bottom">
+                  <span class="product-price">$420.00</span>
+                  <button class="btn-sm">Add to Cart</button>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="alert" aria-live="polite">
+    <iconify-icon icon="lucide:check-circle" style="font-size: 20px; color: var(--success);"></iconify-icon>
+    <span id="toast-message">Item added to cart!</span>
+  </div>
+
+  <footer class="footer-wrapper animate-on-scroll" role="contentinfo">
+    <div class="container">
+      <div class="footer">
+        <div class="footer-brand">
+          <a href="index.html" class="nav-brand">
+            <div style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:var(--primary);border-radius:var(--radius-sm);">
+              <iconify-icon icon="lucide:shield-half" style="font-size:14px; color:var(--primary-foreground)"></iconify-icon>
+            </div>
+            <span>NullSec Gear</span>
+          </a>
+          <p class="footer-desc">Providing mission-critical offensive and defensive security hardware to professionals worldwide.</p>
+        </div>
+        <div class="footer-col">
+          <h3 class="footer-col-title">Red Team</h3>
+          <a href="#" class="footer-link">Keystroke Injectors</a>
+          <a href="#" class="footer-link">Wireless Auditors</a>
+          <a href="#" class="footer-link">Physical Access</a>
+          <a href="#" class="footer-link">RFID Cloners</a>
+        </div>
+        <div class="footer-col">
+          <h3 class="footer-col-title">Blue Team</h3>
+          <a href="#" class="footer-link">Hardware Firewalls</a>
+          <a href="#" class="footer-link">FIDO2 Keys</a>
+          <a href="#" class="footer-link">Cold Storage</a>
+          <a href="#" class="footer-link">Secure Routers</a>
+        </div>
+        <div class="footer-col">
+          <h3 class="footer-col-title">Support</h3>
+          <a href="#" class="footer-link">Documentation</a>
+          <a href="#" class="footer-link">Shipping Policy</a>
+          <a href="#" class="footer-link">Bulk Orders</a>
+          <a href="#" class="footer-link">Contact Us</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2025 NullSec Gear. All rights reserved.</div>
+        <div style="display: flex; gap: 16px;">
+          <a href="#" class="footer-link">Privacy Policy</a>
+          <a href="#" class="footer-link">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

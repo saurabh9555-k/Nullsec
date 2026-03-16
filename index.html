@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NullSec Gear - Mission-critical hardware for modern security teams. Shop offensive red team and defensive blue team cybersecurity equipment.">
+  <title>NullSec Gear – Professional Cybersecurity Hardware</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    /* Homepage-specific styles */
+    .hero-split {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+      padding: 40px 0;
+    }
+    @media (min-width: 768px) {
+      .hero-split {
+        flex-direction: row;
+        gap: 64px;
+        padding: 80px 0;
+      }
+    }
+    .hero-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      align-items: flex-start;
+    }
+    .hero-title {
+      font-size: clamp(32px, 6vw, 56px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      color: var(--foreground);
+      animation: fadeInUp 0.8s ease;
+    }
+    .hero-subtitle {
+      font-size: clamp(16px, 2vw, 18px);
+      color: var(--muted-foreground);
+      line-height: 1.6;
+      max-width: 520px;
+      animation: fadeInUp 0.8s ease 0.1s backwards;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 16px;
+      animation: fadeInUp 0.8s ease 0.2s backwards;
+    }
+    .hero-image {
+      flex: 1;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      height: 320px;
+      position: relative;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-xl);
+      animation: fadeInScale 0.8s ease 0.3s backwards;
+    }
+    @media (min-width: 768px) {
+      .hero-image {
+        height: 520px;
+      }
+    }
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hero-image:hover img {
+      transform: scale(1.05);
+    }
+    .trust-banner {
+      padding: 32px 0;
+      margin-bottom: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    @media (min-width: 768px) {
+      .trust-banner {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
+    .trust-title {
+      font-size: 14px;
+      color: var(--muted-foreground);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+    .trust-logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      align-items: center;
+      opacity: 0.6;
+      filter: grayscale(100%);
+      transition: all 0.3s ease;
+    }
+    @media (min-width: 768px) {
+      .trust-logos {
+        gap: 48px;
+      }
+    }
+    .trust-logos:hover {
+      opacity: 0.8;
+      filter: grayscale(50%);
+    }
+    .trust-logo {
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--foreground);
+      transition: all 0.3s ease;
+    }
+    .trust-logo:hover {
+      filter: grayscale(0%);
+      opacity: 1;
+      transform: scale(1.1);
+    }
+    .category-showcase {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      margin-bottom: 80px;
+    }
+    .showcase-row {
+      display: flex;
+      flex-direction: column;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--card);
+      border: 1px solid var(--border);
+      min-height: auto;
+      box-shadow: var(--shadow-md);
+      transition: all 0.3s ease;
+    }
+    @media (min-width: 768px) {
+      .showcase-row {
+        flex-direction: row;
+        min-height: 480px;
+      }
+      .showcase-row.reverse {
+        flex-direction: row-reverse;
+      }
+    }
+    .showcase-row:hover {
+      box-shadow: var(--shadow-xl);
+      transform: translateY(-4px);
+    }
+    .showcase-content {
+      flex: 1;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 20px;
+    }
+    @media (min-width: 768px) {
+      .showcase-content {
+        padding: 80px;
+      }
+    }
+    .showcase-title {
+      font-size: clamp(28px, 5vw, 40px);
+      font-weight: 800;
+      color: var(--card-foreground);
+      letter-spacing: -0.5px;
+    }
+    .showcase-desc {
+      font-size: 16px;
+      color: var(--muted-foreground);
+      max-width: 400px;
+      line-height: 1.6;
+    }
+    .showcase-media {
+      flex: 1;
+      position: relative;
+      background: var(--muted);
+      min-height: 300px;
+      overflow: hidden;
+    }
+    @media (min-width: 768px) {
+      .showcase-media {
+        min-height: auto;
+      }
+    }
+    .showcase-media img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .showcase-row:hover .showcase-media img {
+      transform: scale(1.05);
+    }
+    .featured-products {
+      margin-bottom: 80px;
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .section-title {
+      font-size: clamp(24px, 4vw, 28px);
+      font-weight: 800;
+      color: var(--foreground);
+      letter-spacing: -0.5px;
+    }
+    .view-all {
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+    .view-all:hover {
+      gap: 8px;
+      transform: translateX(4px);
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-to-content">Skip to main content</a>
+
+  <header class="header-wrapper">
+    <div class="container">
+      <nav class="navbar">
+        <a href="index.html" class="nav-brand">
+          <div style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: var(--primary); border-radius: var(--radius-sm);">
+            <iconify-icon icon="lucide:shield-half" style="font-size: 18px; color: var(--primary-foreground)"></iconify-icon>
+          </div>
+          <span>NullSec Gear</span>
+        </a>
+        <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
+          <iconify-icon icon="lucide:menu" style="font-size: 20px;"></iconify-icon>
+        </button>
+        <div class="nav-links">
+          <a href="index.html" class="nav-link active">All Products</a>
+          <a href="red-team.html" class="nav-link">Red Team</a>
+          <a href="blue-team.html" class="nav-link">Blue Team</a>
+          <a href="#" class="nav-link">Enterprise</a>
+        </div>
+        <div class="nav-actions">
+          <button class="icon-btn" aria-label="Search products">
+            <iconify-icon icon="lucide:search" style="font-size: 18px;"></iconify-icon>
+          </button>
+          <a href="cart.html" class="icon-btn" style="position: relative;" aria-label="Shopping cart">
+            <iconify-icon icon="lucide:shopping-cart" style="font-size: 18px;"></iconify-icon>
+            <span class="cart-badge" aria-label="items in cart">2</span>
+          </a>
+          <button class="icon-btn" aria-label="User account">
+            <iconify-icon icon="lucide:user" style="font-size: 18px;"></iconify-icon>
+          </button>
+          <button class="theme-toggle" aria-label="Toggle theme">
+            <iconify-icon icon="lucide:sun" class="sun-icon" style="font-size: 18px;"></iconify-icon>
+            <iconify-icon icon="lucide:moon" class="moon-icon" style="font-size: 18px; display: none;"></iconify-icon>
+          </button>
+        </div>
+      </nav>
+      <div class="mobile-nav">
+        <div class="mobile-nav-links">
+          <a href="index.html" class="nav-link active">All Products</a>
+          <a href="red-team.html" class="nav-link">Red Team</a>
+          <a href="blue-team.html" class="nav-link">Blue Team</a>
+          <a href="#" class="nav-link">Enterprise</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <div class="container">
+      <!-- Hero Section -->
+      <section class="hero-split" aria-labelledby="hero-title">
+        <div class="hero-content">
+          <div style="display: flex; gap: 8px">
+            <span class="badge badge-red">Offensive</span>
+            <span class="badge badge-blue">Defensive</span>
+          </div>
+          <h1 id="hero-title" class="hero-title">Mission-Critical Hardware for Modern Security Teams</h1>
+          <p class="hero-subtitle">Equip your operators with military-grade penetration testing tools and ironclad defense perimeters. Designed for real-world scenarios.</p>
+          <div class="hero-actions">
+            <a href="red-team.html" class="btn btn-destructive">Shop Red Team</a>
+            <a href="blue-team.html" class="btn btn-primary">Shop Blue Team</a>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img src="https://storage.googleapis.com/banani-generated-images/generated-images/c438b1d8-0531-4c47-8662-c63fb644dc75.jpg" alt="Cybersecurity terminal showing code with dark theme and red blue neon ambient lighting" loading="lazy" width="600" height="520">
+        </div>
+      </section>
+
+      <!-- Trust Banner -->
+      <section class="trust-banner animate-on-scroll" aria-labelledby="trust-title">
+        <p id="trust-title" class="trust-title">Trusted by top security teams worldwide</p>
+        <div class="trust-logos">
+          <div class="trust-logo"><iconify-icon icon="lucide:shield"></iconify-icon><span>GlobalSec</span></div>
+          <div class="trust-logo"><iconify-icon icon="lucide:server"></iconify-icon><span>NetGuard</span></div>
+          <div class="trust-logo"><iconify-icon icon="lucide:lock"></iconify-icon><span>Aegis Defense</span></div>
+          <div class="trust-logo"><iconify-icon icon="lucide:fingerprint"></iconify-icon><span>ZeroTrust Corp</span></div>
+        </div>
+      </section>
+
+      <!-- Category Showcase -->
+      <section class="category-showcase">
+        <article class="showcase-row animate-on-scroll">
+          <div class="showcase-content">
+            <div style="width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; background: var(--destructive); border-radius: var(--radius-md);">
+              <iconify-icon icon="lucide:swords" style="font-size: 28px; color: var(--destructive-foreground);"></iconify-icon>
+            </div>
+            <h2 class="showcase-title">Red Team Operations</h2>
+            <p class="showcase-desc">Covert physical access tools, keystroke injectors, and wireless auditing hardware built for your next red team engagement. Field-tested and operator approved.</p>
+            <a href="red-team.html" class="btn btn-outline" style="margin-top: 16px">View Offensive Arsenal</a>
+          </div>
+          <div class="showcase-media">
+            <img src="https://storage.googleapis.com/banani-generated-images/generated-images/49c8ba44-1a55-470f-b8a9-55787948f7d0.jpg" alt="Red glowing USB drive hacking tool" loading="lazy" width="600" height="480">
+          </div>
+        </article>
+        <article class="showcase-row reverse animate-on-scroll">
+          <div class="showcase-content">
+            <div style="width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; background: var(--primary); border-radius: var(--radius-md);">
+              <iconify-icon icon="lucide:shield-check" style="font-size: 28px; color: var(--primary-foreground);"></iconify-icon>
+            </div>
+            <h2 class="showcase-title">Blue Team Defense</h2>
+            <p class="showcase-desc">Air-gapped storage, robust hardware firewalls, and cryptographic tokens designed to lock down critical infrastructure and protect against advanced persistent threats.</p>
+            <a href="blue-team.html" class="btn btn-outline" style="margin-top: 16px">View Defensive Solutions</a>
+          </div>
+          <div class="showcase-media">
+            <img src="https://storage.googleapis.com/banani-generated-images/generated-images/b1c0c4a1-7570-4aac-91b8-4edd8d1a1b9b.jpg" alt="Blue glowing server rack secure hardware" loading="lazy" width="600" height="480">
+          </div>
+        </article>
+      </section>
+
+      <!-- Featured Products -->
+      <section class="featured-products animate-on-scroll" aria-labelledby="products-title">
+        <div class="section-header">
+          <h2 id="products-title" class="section-title">Tactical Best Sellers</h2>
+          <a href="#" class="view-all">View Entire Catalog <iconify-icon icon="lucide:arrow-right"></iconify-icon></a>
+        </div>
+        <div class="product-grid">
+          <article class="product-card" style="--index: 0;">
+            <div class="product-img-wrapper">
+              <div class="product-badge badge badge-red">Red Team</div>
+              <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/d0f5b3f7-3acb-4fdd-9009-ff327b18d4b5.jpg" alt="Phantom Cable Elite" loading="lazy" width="300" height="300">
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Phantom Cable Elite</h3>
+              <p class="product-type">Keystroke Injector / C2</p>
+              <div class="product-bottom">
+                <span class="product-price">$139.99</span>
+                <button class="btn-sm" aria-label="Add to cart">Add to Cart</button>
+              </div>
+            </div>
+          </article>
+          <article class="product-card" style="--index: 1;">
+            <div class="product-img-wrapper">
+              <div class="product-badge badge badge-blue">Blue Team</div>
+              <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/b75a2801-73ea-495b-8ee6-e62d6ce01fce.jpg" alt="Aegis FIDO2 Key" loading="lazy" width="300" height="300">
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">Aegis FIDO2 Key</h3>
+              <p class="product-type">Hardware Authentication</p>
+              <div class="product-bottom">
+                <span class="product-price">$55.00</span>
+                <button class="btn-sm" aria-label="Add to cart">Add to Cart</button>
+              </div>
+            </div>
+          </article>
+          <article class="product-card" style="--index: 2;">
+            <div class="product-img-wrapper">
+              <div class="product-badge badge badge-red">Red Team</div>
+              <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/fcdaff21-bd4d-41b1-945b-3893721fe639.jpg" alt="RogueNet Auditor" loading="lazy" width="300" height="300">
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">RogueNet Auditor</h3>
+              <p class="product-type">Wireless Pentest Toolkit</p>
+              <div class="product-bottom">
+                <span class="product-price">$210.00</span>
+                <button class="btn-sm" aria-label="Add to cart">Add to Cart</button>
+              </div>
+            </div>
+          </article>
+          <article class="product-card" style="--index: 3;">
+            <div class="product-img-wrapper">
+              <div class="product-badge badge badge-blue">Blue Team</div>
+              <img class="product-img" src="https://storage.googleapis.com/banani-generated-images/generated-images/3b6aaf6b-960d-4e1a-b6fe-70eec4050c0e.jpg" alt="VaultDrive Encrypted" loading="lazy" width="300" height="300">
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">VaultDrive Encrypted</h3>
+              <p class="product-type">FIPS 140-2 Cold Storage</p>
+              <div class="product-bottom">
+                <span class="product-price">$349.99</span>
+                <button class="btn-sm" aria-label="Add to cart">Add to Cart</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="alert" aria-live="polite">
+    <iconify-icon icon="lucide:check-circle" style="font-size: 20px; color: var(--success);"></iconify-icon>
+    <span id="toast-message">Item added to cart!</span>
+  </div>
+
+  <footer class="footer-wrapper animate-on-scroll" role="contentinfo">
+    <div class="container">
+      <div class="footer">
+        <div class="footer-brand">
+          <a href="index.html" class="nav-brand">
+            <div style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: var(--primary); border-radius: var(--radius-sm);">
+              <iconify-icon icon="lucide:shield-half" style="font-size: 14px; color: var(--primary-foreground);"></iconify-icon>
+            </div>
+            <span>NullSec Gear</span>
+          </a>
+          <p class="footer-desc">Providing mission-critical offensive and defensive security hardware to professionals worldwide.</p>
+        </div>
+        <div class="footer-col">
+          <h3 class="footer-col-title">Red Team</h3>
+          <a href="#" class="footer-link">Keystroke Injectors</a>
+          <a href="#" class="footer-link">Wireless Auditors</a>
+          <a href="#" class="footer-link">Physical Access</a>
+          <a href="#" class="footer-link">RFID Cloners</a>
+        </div>
+        <div class="footer-col">
+          <h3 class="footer-col-title">Blue Team</h3>
+          <a href="#" class="footer-link">Hardware Firewalls</a>
+          <a href="#" class="footer-link">FIDO2 Keys</a>
+          <a href="#" class="footer-link">Cold Storage</a>
+          <a href="#" class="footer-link">Secure Routers</a>
+        </div>
+        <div class="footer-col">
+          <h3 class="footer-col-title">Support</h3>
+          <a href="#" class="footer-link">Documentation</a>
+          <a href="#" class="footer-link">Shipping Policy</a>
+          <a href="#" class="footer-link">Bulk Orders</a>
+          <a href="#" class="footer-link">Contact Us</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2025 NullSec Gear. All rights reserved.</div>
+        <div style="display: flex; gap: 16px;">
+          <a href="#" class="footer-link">Privacy Policy</a>
+          <a href="#" class="footer-link">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
